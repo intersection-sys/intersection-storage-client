@@ -1,8 +1,10 @@
 import { formatFileNameTooltipText } from "@/utils/formatFileNameTooltipText";
-import { Button, Center, Flex, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import { Badge, Button, Center, Flex, Heading, SimpleGrid, Text, useDisclosure } from "@chakra-ui/react";
 import { format } from "date-fns";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { ReactSVG } from "react-svg";
+import { AttachFilesToStock } from "./AttachFilesToStock";
+import { QualityTestFile } from "./QualityTestFile";
 
 interface StockInfoProps {
   stock: Stock
@@ -21,7 +23,7 @@ export function StockInfo({ stock }: StockInfoProps) {
     expirationDate
   } = stock;
 
-  console.log(stock, 'sotkc')
+  const [qualityTestsArray, setQualityTests] = useState(qualityTests || null)
 
   return (
     <Flex
@@ -68,50 +70,41 @@ export function StockInfo({ stock }: StockInfoProps) {
             title={'Quantidade utilizada:'}
             value={used + stock.rawMaterial?.unit}
           />
+          <InfoCard
+            title={'Data de entrada:'}
+            value={format(new Date(expirationDate), 'dd/MM/yyyy')}
+          />
+          <InfoCard
+            title={'Estado:'}
+            value={
+              <Badge colorScheme={'green'}>Utilizável</Badge>
+            }
+          />
         </SimpleGrid>
 
-        <Flex direction="column" flex="5">
+        <Flex direction="column" flex="5" gap=".5rem">
+
           <Flex direction="column" gap=".5rem" alignItems={'flex-start'} p=".5rem" rounded="md" border="1px solid" borderColor="blue.200">
             <Text fontWeight={600} lineHeight="120%">Testes de Qualidade</Text>
             <Flex gap=".25rem">
-              {qualityTests && qualityTests.length > 0 && qualityTests.map((file, index) => (
-                <a href={file.url} key={file.url} target="_blank" rel="noreferrer">
-                  <Button
-                    w="3rem"
-                    h="3.5rem"
-                    _hover={{ bg: 'blue.100' }}
-                    bg="blue.200"
-                    rounded="md"
-                    sx={{ '&:hover': {
-                      _after: {
-                        opacity: 1,
-                      }
-                    }}}
-                    _after={{
-                      opacity: 0,
-                      content: `"${formatFileNameTooltipText(file.fileName)}"`,
-                      position: 'absolute',
-                      left: '0',
-                      top: '-.25rem',
-                      transform: 'translateY(-100%)',
-                      p: '.5rem',
-                      rounded: 'md',
-                      bg: "blue.100",
-                      zIndex: 2,
-                      transition: '.2s',
-                    }}
-                  >
-                    <ReactSVG src={file.fileName.includes('.pdf') ? "/icons/files/pdf.svg" : "/icons/files/image.svg"} />
-                  </Button>
-                </a>
+              {qualityTestsArray && qualityTestsArray.length > 0 && qualityTestsArray.map((file, index) => (
+                <QualityTestFile file={file} key={file.id} />
               ))}
             </Flex>
-            <Button colorScheme={'facebook'} w="100%">Anexar arquivos</Button>
+
+            <AttachFilesToStock
+              stock={stock}
+              postDelete={((newQualityTests: QualityTest[]) => {
+                if (!qualityTestsArray) return;
+                setQualityTests(newQualityTests);
+              })}
+            />
           </Flex>
         </Flex>
       </Flex>
 
       <Text lineHeight={'100%'} fontSize=".8rem" color="gray.500" mt="1rem">ID no banco de dados: {stock.id}</Text>
+
     </Flex>
   );
 }

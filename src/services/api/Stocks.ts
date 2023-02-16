@@ -11,7 +11,7 @@ export const getStocks = async (token: string) => {
 
     return data;
   } catch (error: any) {
-    throw new Error(error.message);
+    throw new Error(error.response.data.message);
   }
 }
 
@@ -26,6 +26,55 @@ export const getStockByID = async (stockId: string, token: string, options?: { s
 
     return data;
   } catch (error: any) {
-    throw new Error(error.message);
+    throw new Error(error.response.data.message);
+  }
+}
+
+export const createStock = async (data: CreateStock, token: string) => {
+  if (!token) throw new Error('Unauthorized!');
+  try {
+    const { data: stock } = await api.post(`/stock`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    return stock;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+}
+
+export const uploadStockQualityTests = async (stockId: string, data: FormData, token: string) => {
+  if (!token) throw new Error('Unauthorized!');
+
+  try {
+    const res = await api.post(`/stock/qualitytest/${stockId}`, data, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      }
+    });
+
+    return res;
+  } catch (error: any) {
+   throw new Error(error.response.data.message)
+  }
+}
+
+export const removeStockQualityTests = async (qualityTestsId: string, token: string) => {
+  if (!token) throw new Error('Unauthorized!');
+
+  try {
+    const { data: stock } = await api.delete(`/stock/qualitytest/${qualityTestsId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return stock;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
   }
 }

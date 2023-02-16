@@ -1,3 +1,4 @@
+import { CreateRawMaterialForm } from '@/components/RawMaterial/CreateRawMaterialForm';
 import { RawMaterialList } from '@/components/RawMaterial/RawMaterialList';
 import { useAuth } from '@/hooks/useAuth';
 import { getRawMaterials } from '@/services/api/RawMaterials';
@@ -11,8 +12,10 @@ const MateriaPrima: NextPage = () => {
   const { session, isAuthLoading } = useAuth();
   const router = useRouter();
 
-
-  const { data, isLoading, error, refetch } = useQuery('rawMaterials', async () => session && await getRawMaterials(session.accessToken), { enabled: false });
+  const { data, isLoading, error, refetch } = useQuery(
+    'rawMaterials',
+    async () => session && await getRawMaterials(session.accessToken)
+  );
 
   // AUTH VALIDATION
   useEffect(() => {
@@ -23,8 +26,8 @@ const MateriaPrima: NextPage = () => {
         return;
       } else {
         // FETCH
-        if(!data && !isLoading){
-           refetch();
+        if (!data && !isLoading) {
+          refetch();
         }
       }
     })();
@@ -44,7 +47,7 @@ const MateriaPrima: NextPage = () => {
       <Flex alignItems={'center'} justifyContent="space-between" maxW="1440px" w="100%">
         <Heading fontFamily={'Poppins'} fontWeight="500">Matéria Prima</Heading>
 
-        <Button colorScheme={'facebook'} fontWeight="500">Nova Matéria Prima</Button>
+        <CreateRawMaterialForm />
       </Flex>
 
       <Flex maxW="1440px" w="100%">

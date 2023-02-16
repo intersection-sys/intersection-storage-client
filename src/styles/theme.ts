@@ -47,15 +47,15 @@ const styles = {
 
     /* Handle */
     '::-webkit-scrollbar-thumb': {
-      background: '#EA4972',
-      borderRadius: '4px'
+      background: '#293056',
     },
 
     /* Handle on hover */
     '::-webkit-scrollbar-thumb:hover': {
-      background: '#555',
+      background: '#f2f5fe',
     },
     body: {
+      overflowX: 'hidden',
       background: "gray.100",
       color: "gray.900",
       fontFamily: 'Poppins',

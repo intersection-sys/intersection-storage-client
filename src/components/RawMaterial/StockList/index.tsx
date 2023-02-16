@@ -1,10 +1,11 @@
-import { Button, Center, Flex, Text } from "@chakra-ui/react";
+import { Button, Center, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { StockItem } from "./StockItem";
 
 import { Container, chakra, shouldForwardProp } from '@chakra-ui/react';
 import { motion, isValidMotionProp } from 'framer-motion';
 import { Loading } from "@/components/Loading";
 import { useEffect, useState } from "react";
+import { DefineStockDestiny } from "./DefineStockDestiny";
 
 const ChakraBox = chakra(motion.div, {
   shouldForwardProp: (prop) => isValidMotionProp(prop) || shouldForwardProp(prop),
@@ -19,6 +20,9 @@ interface StockListProps {
 export function StockList({ rawMaterial, isRawMaterialsLoading }: StockListProps) {
   const [stocks, setStocks] = useState(rawMaterial.stocks || [])
 
+  const [stockToDefineDestiny, setStockToDefineDestiny] = useState<Stock | null>();
+  const { onOpen, isOpen, onClose } = useDisclosure();
+
   useEffect(() => {
     setStocks(rawMaterial?.stocks || []);
   }, [rawMaterial]);
@@ -31,7 +35,21 @@ export function StockList({ rawMaterial, isRawMaterialsLoading }: StockListProps
 
       <Flex direction={'column'}>
         {stocks && stocks.length > 0 && stocks?.map((stock) => (
-          <StockItem stock={stock} unit={rawMaterial.unit} key={stock.id} />
+          <StockItem
+            stock={stock}
+            unit={rawMaterial.unit}
+            key={stock.id}
+            handlePutStockToDefineDestiny={(stock: Stock) => {
+              setStockToDefineDestiny({
+                ...stock,
+                rawMaterial: {
+                  name: rawMaterial.name,
+                  id: rawMaterial.id,
+                }
+              });
+              onOpen()
+            }}
+          />
         ))}
 
         {isRawMaterialsLoading && (
@@ -47,6 +65,18 @@ export function StockList({ rawMaterial, isRawMaterialsLoading }: StockListProps
           </Center>
         )}
       </Flex>
+
+      {stockToDefineDestiny && (
+        <DefineStockDestiny
+          stock={stockToDefineDestiny}
+          isOpen={isOpen}
+          unit={rawMaterial.unit}
+          onClose={() => {
+            setStockToDefineDestiny(null)
+            onClose()
+          }}
+        />
+      )}
     </Flex>
   );
 }

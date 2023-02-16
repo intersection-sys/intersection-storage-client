@@ -9,8 +9,8 @@ export async function getUser(userId: string, token: string) {
     })
 
     return data;
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
   }
 }
 
@@ -23,7 +23,7 @@ export async function getUsers(token: string) {
     })
 
     return data;
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
   }
 }
