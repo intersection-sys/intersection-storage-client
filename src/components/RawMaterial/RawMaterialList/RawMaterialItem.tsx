@@ -14,7 +14,6 @@ export function RawMaterialItem({ rawMaterial }: RawMaterialItemProps) {
 
   const rawMaterialStatus = isRunningOut ? 'danger' : isCloseToRunningOut ? "warning" : "success"
 
-  const currentBg = isRunningOut ? "yellow.500" : "green.500"
   return (
     <Flex w="100%" alignItems={'center'} gap="1rem" p=".5rem" borderBottom="1px solid" borderColor="gray.300">
       <StatusIndicator
@@ -24,37 +23,6 @@ export function RawMaterialItem({ rawMaterial }: RawMaterialItemProps) {
           : isCloseToRunningOut ? 'Estoque próximo de acabar!' : 'Estoque regular.'
           }`}
       />
-      {/* <Center
-        w="3rem"
-        h="3rem"
-        bg={currentBg}
-        rounded="md"
-        pos="relative"
-        _hover={{
-          _after: {
-            opacity: 1,
-            zIndex: 2,
-          }
-        }}
-        _after={{
-          content: `""`,
-          pos: 'absolute',
-          fontWeight: '500',
-          left: 0,
-          top: 'calc(100% + .25rem)',
-          w: '18rem',
-          maxW: '350px',
-          p: '.25rem',
-          rounded: 'sm',
-          fontSize: '.75rem',
-          bg: currentBg,
-          transition: '.3s',
-          zIndex: -3,
-          opacity: 0,
-        }}
-      >
-        <ReactSVG src={isRunningOut ? '/icons/indicators/alert.svg' : '/icons/indicators/check.svg'} />
-      </Center> */}
 
       <Text>{name}</Text>
       <Text ml="auto" fontWeight={'500'}>{quantity}{unit} em estoque</Text>

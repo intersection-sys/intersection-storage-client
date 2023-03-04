@@ -78,3 +78,18 @@ export const removeStockQualityTests = async (qualityTestsId: string, token: str
     throw new Error(error.response.data.message);
   }
 }
+
+
+export async function searchStocks(query: string, token: string) {
+  try {
+    const { data } = await api.get(`/stock/search/${query}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    return data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+}

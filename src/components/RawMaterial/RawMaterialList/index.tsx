@@ -1,13 +1,9 @@
-import { Button, Center, Flex, Text } from "@chakra-ui/react";
+import { Button, Center, Flex, Input, Text } from "@chakra-ui/react";
 import { RawMaterialItem } from "./RawMaterialItem";
-
-import { Container, chakra, shouldForwardProp } from '@chakra-ui/react';
-import { motion, isValidMotionProp } from 'framer-motion';
+import { MagnifyingGlass } from 'phosphor-react';
 import { Loading } from "@/components/Loading";
-
-const ChakraBox = chakra(motion.div, {
-  shouldForwardProp: (prop) => isValidMotionProp(prop) || shouldForwardProp(prop),
-});
+import { useLayoutEffect, useState } from "react";
+import { SearchRawMaterials } from "./SearchRawMaterial";
 
 interface RawMaterialListProps {
   rawMaterials: RawMaterial[];
@@ -15,14 +11,22 @@ interface RawMaterialListProps {
 }
 
 export function RawMaterialList({ rawMaterials, isRawMaterialsLoading }: RawMaterialListProps) {
+  const [searchResult, setSearchResult] = useState<RawMaterial[]>([]);
+
+  function postSearch(rawMaterialsFound: RawMaterial[]) {
+    setSearchResult(rawMaterialsFound)
+  }
+
   return (
     <Flex w="100%" direction="column">
-      <Flex w="100%" bg="white" rounded="1rem 1rem 0 0 " h="60px">
-
+      <Flex w="100%" bg="white" rounded="1rem 1rem 0 0 " p="1rem">
+        <SearchRawMaterials postSearch={postSearch} clearSearch={() => setSearchResult([])} />
       </Flex>
 
       <Flex direction={'column'}>
-        {rawMaterials?.length > 0 && rawMaterials?.map((rawMaterial) => (
+        {searchResult.length > 0 ? searchResult?.map(rawMaterial => (
+          <RawMaterialItem rawMaterial={rawMaterial} key={rawMaterial.id} />
+        )) : (rawMaterials?.length > 0) && rawMaterials?.map((rawMaterial) => (
           <RawMaterialItem rawMaterial={rawMaterial} key={rawMaterial.id} />
         ))}
 

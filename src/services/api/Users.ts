@@ -27,3 +27,17 @@ export async function getUsers(token: string) {
     throw new Error(error.response.data.message);
   }
 }
+
+export async function searchUsers(query: string, token: string) {
+  try {
+    const { data } = await api.get(`/user/search/${query}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    return data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+}
